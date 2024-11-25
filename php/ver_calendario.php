@@ -57,14 +57,11 @@ $conn->close();
     <div class="dropdown">
         <button class="dropbtn">&#9776; Opciones</button>
         <div class="dropdown-content">
-            <a href="Index Juan.html">Inicio</a>
-            <a href="clientes.jsp">Lista de Clientes</a>
-            <a href="mecanicos.jsp">Lista de Mecánicos</a>
-            <a href="registroauto.html">Registrar Nuevo Auto</a>
-            <a href="autos.jsp">Consultar Lista de Autos</a>
-            <a href="citas.jsp">Consultar Calendario de Citas</a>
-            <a href="asignaciones.jsp">Asignaciones por Mecánico</a>
-            <a href="ordenes.jsp">Órdenes de Trabajo</a>
+            <a href="../admin.php">Inicio</a>
+            <a href="ver_calendario.php">Consultar Calendario de Citas</a>
+            <a href="detalle_cliente.php">Lista de Clientes</a>
+            <a href="ver_mecanicos.php">Lista de Mecánicos</a>
+            <a href="../registromecanico.html">Registro de Mecánico</a>
             <a href="logout.php">Cerrar Sesión</a>
         </div>
     </div>

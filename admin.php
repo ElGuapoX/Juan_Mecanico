@@ -30,13 +30,10 @@ setcookie('ultima_sesion', date('d-m-Y H:i:s'), time() + (86400 * 30), "/"); // 
         <button class="dropbtn">&#9776; Opciones</button>
         <div class="dropdown-content">
             <a href="admin.php">Inicio</a>
+            <a href="php/ver_calendario.php">Consultar Calendario de Citas</a>
             <a href="php/detalle_cliente.php">Lista de Clientes</a>
             <a href="php/ver_mecanicos.php">Lista de Mecánicos</a>
             <a href="registromecanico.html">Registro de Mecánico</a>
-            <a href="autos.jsp">Consultar Lista de Autos</a>
-            <a href="php/ver_calendario.php">Consultar Calendario de Citas</a>
-            <a href="asignaciones.jsp">Asignaciones por Mecánico</a>
-            <a href="ordenes.jsp">Órdenes de Trabajo</a>
             <a href="logout.php">Cerrar Sesión</a>
         </div>
     </div>

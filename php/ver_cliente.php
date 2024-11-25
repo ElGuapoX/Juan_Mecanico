@@ -50,13 +50,12 @@ $conn->close();
     <div class="dropdown">
         <button class="dropbtn">&#9776; Opciones</button>
         <div class="dropdown-content">
-                <a href="../admin.php">Inicio</a>
-                <a href="../php/detalle_cliente.php">Lista de Clientes</a>
-                <a href="../php/ver_mecanicos.php">Lista de Mecánicos</a>
-                <a href="../registroauto.html">Registrar Nuevo Auto</a>
-                <a href="../php/ver_calendario.php">Consultar Calendario de Citas</a>
-                <a href="logout.php">Cerrar Sesión</a>
-            </div>
+            <a href="../admin.php">Inicio</a>
+            <a href="ver_calendario.php">Consultar Calendario de Citas</a>
+            <a href="detalle_cliente.php">Lista de Clientes</a>
+            <a href="ver_mecanicos.php">Lista de Mecánicos</a>
+            <a href="../registromecanico.html">Registro de Mecánico</a>
+            <a href="logout.php">Cerrar Sesión</a>
         </div>
     </div>
 </header>
