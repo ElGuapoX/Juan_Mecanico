@@ -4,7 +4,7 @@ include_once 'db.php';
 
 // Verificar si el usuario ha iniciado sesión
 if (!isset($_SESSION['usuario_id'])) {
-    header("Location: login.html"); 
+    header("Location: login.html");
     exit();
 }
 
@@ -13,34 +13,47 @@ $conn = $db->connect();
 
 $id_cliente = $_GET['id_cliente']; // Obtener el ID del cliente desde la URL
 
-// Realizamos un JOIN con la tabla CLIENTE para obtener el nombre y apellido
+// Evitar inyecciones SQL
+$id_cliente = $conn->real_escape_string($id_cliente);
+
+// Realizamos un JOIN con la tabla CLIENTE para obtener el nombre, apellido y tipo de servicio
 $query_cliente = "
-    SELECT C.ID_CLIENTE, C.nombre, C.apellido, CT.FECHA_SOLICITUD, CT.HORA
+    SELECT 
+        C.ID_CLIENTE, 
+        C.nombre, 
+        C.apellido, 
+        CT.FECHA_SOLICITUD, 
+        CT.HORA, 
+        S.DESCRIPCION AS SERVICIO, 
+        S.COSTO
     FROM CITA CT
     JOIN CLIENTE C ON CT.ID_CLIENTE = C.ID_CLIENTE
-    WHERE C.ID_CLIENTE = $id_cliente
+    JOIN SERVICIO S ON CT.SERVICIO = S.ID_SERVICIO
+    WHERE C.ID_CLIENTE = '$id_cliente'
 ";
 
 $result_cliente = $conn->query($query_cliente);
 $cliente = null;
 
-if ($result_cliente->num_rows > 0) {
+if ($result_cliente && $result_cliente->num_rows > 0) {
     $cliente = $result_cliente->fetch_assoc();
 } else {
-    echo "No se encontró el cliente.";
+    echo "<p>No se encontró el cliente o no tiene citas registradas.</p>";
+    $conn->close();
+    exit();
 }
 
 // Consulta para obtener los autos del cliente
 $query_autos = "
     SELECT A.MODELO, A.MATRICULA, A.MARCA, A.COLOR
     FROM AUTOMOVIL A
-    WHERE A.ID_CLIENTE = $id_cliente
+    WHERE A.ID_CLIENTE = '$id_cliente'
 ";
 
 $result_autos = $conn->query($query_autos);
 $autos = [];
 
-if ($result_autos->num_rows > 0) {
+if ($result_autos && $result_autos->num_rows > 0) {
     while ($row = $result_autos->fetch_assoc()) {
         $autos[] = $row;
     }
@@ -61,7 +74,7 @@ $conn->close();
 <header>
     <div class="header-content">
         <a href="../admin.php"><img src="/Universidad/juan_mecanico/images/con_fondo-removebg-preview (1).png" alt="Logo Juan Mecanico" class="logo"></a>
-        <div class="contact-info">Contactanos: 1234-5678  /  5678-1234</div>
+        <div class="contact-info">Contactanos: 1234-5678 / 5678-1234</div>
         <div class="hours">Horario de atención: lunes a sábado de 8:00 am a 6:00 pm</div>
     </div>
     <div class="dropdown">
@@ -81,19 +94,21 @@ $conn->close();
     <h2>Detalles de la Cita</h2>
     
     <?php if ($cliente): ?>
-        <p><strong>Cliente:</strong> <?php echo $cliente['nombre'] . " " . $cliente['apellido']; ?></p>
-        <p><strong>Fecha de Solicitud:</strong> <?php echo $cliente['FECHA_SOLICITUD']; ?></p>
-        <p><strong>Hora de la Cita:</strong> <?php echo $cliente['HORA']; ?></p>
+        <p><strong>Cliente:</strong> <?php echo htmlspecialchars($cliente['nombre'] . " " . $cliente['apellido']); ?></p>
+        <p><strong>Fecha de Solicitud:</strong> <?php echo htmlspecialchars($cliente['FECHA_SOLICITUD']); ?></p>
+        <p><strong>Hora de la Cita:</strong> <?php echo htmlspecialchars($cliente['HORA']); ?></p>
+        <p><strong>Servicio:</strong> <?php echo htmlspecialchars($cliente['SERVICIO']); ?></p>
+        <p><strong>Costo:</strong> $<?php echo htmlspecialchars($cliente['COSTO']); ?></p>
 
         <h3>Autos del Cliente</h3>
         <?php if (count($autos) > 0): ?>
             <ul>
                 <?php foreach ($autos as $auto): ?>
                     <li>
-                        <strong>Marca:</strong> <?php echo $auto['MARCA']; ?><br>
-                        <strong>Modelo:</strong> <?php echo $auto['MODELO']; ?><br>
-                        <strong>Matrícula:</strong> <?php echo $auto['MATRICULA']; ?><br>
-                        <strong>Color:</strong> <?php echo $auto['COLOR']; ?>
+                        <strong>Marca:</strong> <?php echo htmlspecialchars($auto['MARCA']); ?><br>
+                        <strong>Modelo:</strong> <?php echo htmlspecialchars($auto['MODELO']); ?><br>
+                        <strong>Matrícula:</strong> <?php echo htmlspecialchars($auto['MATRICULA']); ?><br>
+                        <strong>Color:</strong> <?php echo htmlspecialchars($auto['COLOR']); ?>
                     </li>
                 <?php endforeach; ?>
             </ul>
@@ -106,7 +121,7 @@ $conn->close();
 <footer>
     <nav class="main-nav">
         <ul>
-        <li><a href="../admin.php">Inicio</a></li>
+            <li><a href="../admin.php">Inicio</a></li>
             <li><a href="../php/ver_calendario.php">Citas</a></li>
             <li><a href="../php/detalle_cliente.php">Clientes</a></li>
             <li><a href="../php/ver_mecanicos.php">Mecánicos</a></li>

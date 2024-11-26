@@ -22,6 +22,14 @@
             <form action="php/registrocita.php" method="post" name="formulario">
                 <label>Fecha de la cita:</label> <input type="date" name="fecha" required><br>
                 <label>Hora de la cita:</label> <input type="time" name="hora" required><br>
+                <label>Servicio:</label>
+                <select name="servicio">
+                    <option value="0">Diagnostico General</option>
+                    <option value="1">Mantenimiento</option>
+                    <option value="2">Chapisteria y Pintura</option>
+                    <option value="3">Alineacion</option>
+                </select>
+                
                 <input type="submit" name="botonguardar" value="Registrar Cita">
             </form>
         </section>
